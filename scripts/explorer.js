@@ -2,6 +2,7 @@ const appListURL = 'https://api.steampowered.com/ISteamApps/GetAppList/v2?origin
 const appListCacheLength = 60 * 60 * 1000;
 const userDataURL = 'https://store.steampowered.com/dynamicstore/userdata/';
 const userDataCacheLength = 60 * 60 * 1000;
+const latestAppReleased = 2403130;
 
 let db;
 let userData = {};
@@ -161,8 +162,13 @@ function getNextAppUnseen(callback) {
     const index = objectStore.index('seen');
 
     index.openCursor(0, 'prev').onsuccess = (event) => {
-        console.log('Next app to see is ' + event.target.result.value.appid + ' - ' + event.target.result.value.name);
-        callback(event.target.result.value.appid);
+        const cursor = event.target.result;
+        if (cursor.value.appid > latestAppReleased) {
+            cursor.continue();
+        } else {
+            console.log('Next app to see is ' + cursor.value.appid + ' - ' + cursor.value.name);
+            callback(event.target.result.value.appid);
+        }
     }
 }
 
