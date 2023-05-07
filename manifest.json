@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Steam Explorer",
+  "version": "1.0",
+  "description": "Allows to explore steam apps in another way",
+
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/explorer.js"],
+      "matches": [
+        "https://store.steampowered.com/*"
+      ]
+    }
+  ]
+}
