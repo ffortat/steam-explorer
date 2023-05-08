@@ -7,6 +7,17 @@ const latestAppReleased = 2403130;
 let db;
 let userData = {};
 
+/**
+ * URLS
+ * - https://store.steampowered.com/dynamicstore/userdata/
+ * - https://store.steampowered.com/api/appdetails?appids=2402430
+ * - https://api.steampowered.com/ISteamApps/GetAppList/v2/
+ * - https://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v1/
+ * - https://api.steampowered.com/IStoreService/GetAppList/v1/?key=<key>&include_games=true&max_results=50000
+ * - https://api.steampowered.com/IStoreService/GetAppList/v1/?key=<key>&include_games=true&last_appid=1513430&max_results=50000
+ * - https://api.steampowered.com/IStoreService/GetAppInfo/v1/?app=10
+ */
+
 function request(url, callback) {
     fetch(url, {method: 'GET'})
         .then((response) => {
@@ -251,10 +262,4 @@ function storeInDatabase() {
 // invalidateCache();
 storeInDatabase();
 
-/**
- * TODO process data locally
- *  - ignore all apps that have been : ignored, possessed, wishlisted, seen
- *  - retrieve the first app not ignored
- *  - display button to check next app
- *  - add app to ignored list once seen
- */
+// TODO check if app page redirected to another one => remove previous app (or mark as seen too)
