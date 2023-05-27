@@ -7,6 +7,9 @@ const latestAppReleased = 2403130;
 let db;
 let userData = {};
 
+let nextButton;
+let randomButton;
+
 /**
  * URLS
  * - https://store.steampowered.com/dynamicstore/userdata/
@@ -25,6 +28,7 @@ function request(url, callback) {
         })
         .then(callback);
 }
+
 function cacheExpired(key, length) {
 
     if (localStorage.getItem(key) !== null) {
@@ -146,8 +150,10 @@ function onAppsLoaded() {
 
     if (pageData.length === 2 && pageData[0] === 'app') {
         currentAppid = parseInt(pageData[1]);
-        setAppAsSeen(currentAppid);
+        setupAppPage(currentAppid);
     }
+
+    setupGenericPage();
 
     getNextAppUnseen((appid) => {
         addExploreButtonToSteamPage(appid);
@@ -155,6 +161,60 @@ function onAppsLoaded() {
 
     getRandomAppUnseen((appid) => {
         addRandomButtonToSteamPage(appid);
+    });
+}
+
+/**
+ * Setup all we want to do on an app page from here
+ * @param appid
+ */
+function setupAppPage(appid) {
+    setAppAsSeen(appid);
+
+    const wishlistButton = document.getElementById('add_to_wishlist_area');
+    const unwishlistButton = document.getElementById('add_to_wishlist_area_success');
+    const ignoreButton = document.getElementById('ignoreBtn');
+    const queueButton = document.getElementById('nextInDiscoveryQueue');
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'w' && !event.ctrlKey) { // Wishlist toggle
+            if (wishlistButton && wishlistButton.style.display !== 'none') {
+                wishlistButton.firstElementChild.click();
+            } else if (unwishlistButton && unwishlistButton.style.display !== 'none') {
+                unwishlistButton.firstElementChild.click();
+            }
+        }
+
+        if ((event.key === 'i' || event.key === 'x') && ignoreButton) { // Ignore / eXclude toggle
+            if (ignoreButton.firstElementChild.firstElementChild.style.display !== 'none') {
+                ignoreButton.firstElementChild.firstElementChild.click();
+            } else {
+                ignoreButton.firstElementChild.lastElementChild.click();
+            }
+        }
+
+        if (event.key === 'c') { // Continue
+            if (queueButton) {
+                queueButton.lastElementChild.click();
+            } else if (randomButton) {
+                randomButton.click();
+            }
+        }
+    });
+}
+
+/**
+ * Setup all we want to do on any page from here
+ */
+function setupGenericPage() {
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'r') {
+            randomButton.click();
+        }
+
+        if (event.key === 'n') {
+            nextButton.click();
+        }
     });
 }
 
