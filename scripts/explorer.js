@@ -182,7 +182,7 @@ function getNextAppUnseen(callback) {
             cursor.continue();
         } else {
             console.log('Next app to see is ' + cursor.value.appid + ' - ' + cursor.value.name);
-            callback(event.target.result.value.appid);
+            callback(event.target.result.value);
         }
     }
 }
@@ -202,30 +202,31 @@ function getRandomAppUnseen(callback) {
                 cursor.continue();
             } else {
                 console.log('Random app to see is ' + cursor.value.appid + ' - ' + cursor.value.name);
-                callback(event.target.result.value.appid);
+                callback(event.target.result.value);
             }
         };
     };
 }
 
-function addExploreButtonToSteamPage(appid) {
+function addButtonToSteamPage(app, text) {
     const navBar = document.getElementsByClassName('store_nav')[0];
     const exploreButton = document.createElement('a');
     exploreButton.className = 'tab';
-    exploreButton.href = `${window.location.origin}/app/${appid}`
-    exploreButton.innerHTML = `<span>Next</span>`;
+    exploreButton.href = `${window.location.origin}/app/${app.appid}`
+    exploreButton.title = app.name;
+    exploreButton.innerHTML = `<span>${text}</span>`;
 
     navBar.appendChild(exploreButton);
+
+    return exploreButton;
 }
 
-function addRandomButtonToSteamPage(appid) {
-    const navBar = document.getElementsByClassName('store_nav')[0];
-    const exploreButton = document.createElement('a');
-    exploreButton.className = 'tab';
-    exploreButton.href = `${window.location.origin}/app/${appid}`
-    exploreButton.innerHTML = `<span>Random</span>`;
+function addExploreButtonToSteamPage(app) {
+    nextButton = addButtonToSteamPage(app, 'Next');
+}
 
-    navBar.appendChild(exploreButton);
+function addRandomButtonToSteamPage(app) {
+    randomButton = addButtonToSteamPage(app, 'Random');
 }
 
 function storeInDatabase() {
